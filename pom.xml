@@ -217,6 +217,7 @@
     </dependencies>
 
     <build>
+        <defaultGoal>compile</defaultGoal>
         <plugins>
             <!-- JUnit 配置 -->
             <plugin>
