@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+    <style>
+        * { margin: 0; padding: 0; }
+        html { height: 100%; }
+        body { height: 100%; background: #fff url(../static/images/background.jpg) 50% 50% no-repeat; background-size: cover;}
+        .dowebok { position: absolute; left: 50%; top: 50%; width: 430px; height: 550px; margin: -300px 0 0 -215px; border: 1px solid #fff; border-radius: 20px; overflow: hidden;}
+        .form-item { position: relative; width: 360px; margin: 0 auto; padding-bottom: 30px;}
+        .form-item input { width: 288px; height: 48px; padding-left: 70px; border: 1px solid #fff; border-radius: 25px; font-size: 18px; color: #fff; background-color: transparent; outline: none;}
+        .form-item button { width: 360px; height: 50px; border: 0; border-radius: 25px; font-size: 18px; color: #1f6f4a; outline: none; cursor: pointer; background-color: #fff; }
+        #username { background: url(../static/images/emil.png) 20px 14px no-repeat; }
+        #password { background: url(../static/images/password.png) 23px 11px no-repeat; }
+        .tip { display: none; position: absolute; left: 20px; top: 52px; font-size: 14px; color: #f50; }
+        .reg-bar { width: 360px; margin: 20px auto 0; font-size: 14px; overflow: hidden;}
+        .reg-bar a { color: #fff; text-decoration: none; }
+        .reg-bar a:hover { text-decoration: underline; }
+        .reg-bar .reg { float: left; }
+        .reg-bar .forget { float: right; }
+        .dowebok ::-webkit-input-placeholder { font-size: 18px; line-height: 1.4; color: #fff;}
+        .dowebok :-moz-placeholder { font-size: 18px; line-height: 1.4; color: #fff;}
+        .dowebok ::-moz-placeholder { font-size: 18px; line-height: 1.4; color: #fff;}
+        .dowebok :-ms-input-placeholder { font-size: 18px; line-height: 1.4; color: #fff;}
+
+        @media screen and (max-width: 500px) {
+            * { box-sizing: border-box; }
+            .dowebok { position: static; width: auto; height: auto; margin: 0 30px; border: 0; border-radius: 0; }
+            .logo { margin: 50px auto; }
+            .form-item { width: auto; }
+            .form-item input, .form-item button, .reg-bar { width: 100%; }
+        }
+    </style>
+</head>
+<body th:style="'background:no-repeat 50% 50% #FFF url(' + @{/images/background.jpg} + ' );height: 100%;  background-size: cover;'">
+<div class="dowebok">
+    <div class="logo" th:text="${msg}"></div>
+    <form name="login_form" id="login_form" action="/login" method="post" οnsubmit="checkForm(this)" >
+    <div class="form-item">
+        <input id="username" name="username" type="text" autocomplete="off" placeholder="帐号" th:style="'background: url(../static/images/emil.png) 20px 14px no-repeat;'">
+        <p class="tip">账号不能为空</p>
+    </div>
+    <div class="form-item">
+        <input id="password" name="password" type="password" autocomplete="off" placeholder="登录密码" th:style="'background: url(../static/images/password.png) 23px 11px no-repeat;'">
+        <p class="tip" th:text="${msg}">密码不能为空</p>
+    </div>
+    <div class="form-item"><!--<button  onclick="login()">登 录</button>-->
+        <input type="submit" value="登入">
+    </div>
+    <div class="reg-bar">
+       <!-- <a class="reg" href="#" target="_blank">立即注册</a>
+        <a class="forget" href="#" target="_blank">忘记密码</a>-->
+    </div>
+    </form>
+</div>
+
+<script src="../static/js/jquery-2.1.4.min.js" th:src="@{/js/jquery-2.1.4.min.js}" ></script>
+
+<script>
+    function CheckForm(form) {
+        if(form.username.value == "") {
+            var username = $("#username").val();
+            var password = $("#password").val();
+
+            //判断是否需要记住密码
+            var rememberMe = $("#rememberMe").prop('checked');
+
+            if ($.trim(username) == '') {
+                $('.tip').eq(0).show();
+                return false;
+            }else {
+                $('.tip').eq(0).hide();
+            }
+            if ($.trim(password) == '') {
+                $('.tip').eq(1).show();
+                return false;
+            }else {
+                $('.tip').eq(1).hide();
+            }
+
+            return false
+        }
+        return true;
+    }
+    function login() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        //判断是否需要记住密码
+        var rememberMe = $("#rememberMe").prop('checked');
+
+        if ($.trim(username) == '') {
+            $('.tip').eq(0).show();
+            return false;
+        }else {
+            $('.tip').eq(0).hide();
+        }
+        if ($.trim(password) == '') {
+            $('.tip').eq(1).show();
+            return false;
+        }else {
+            $('.tip').eq(1).hide();
+        }
+
+
+        var url = "/login/login";
+        $.ajax({
+            type: "POST",
+            url:url,
+            data:{"username":username,"password":password,"rememberMe":true},
+            success: function (json) {
+                if(json.code == "0"){
+                    //记住密码
+                    window.location.href= "index.html";
+                }else{
+                    $('.tip').eq(1).text(json.msg)
+                    $('.tip').eq(1).show();
+                }
+
+            }
+        });
+
+    }
+</script>
+</body>
+</html>
