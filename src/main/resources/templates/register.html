@@ -10,6 +10,33 @@
     用户名：<input type="text" name="username"><br>
     密&emsp;码：<input type="password" name="password"><br>
     <input type="submit" value="Login">
+    <div id="app-2">
+  <span v-bind:title="message">
+    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+  </span>
+    </div>
+    <div id="components-demo">
+        <button-counter></button-counter>
+    </div>
 </form>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+<script>
+    var app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: '页面加载于 ' + new Date().toLocaleString()
+        }
+    })
+    // 定义一个名为 button-counter 的新组件
+    Vue.component('button-counter', {
+        data: function () {
+            return {
+                count: 0
+            }
+        },
+        template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+    })
+    new Vue({ el: '#components-demo' })
+</script>
 </html>
